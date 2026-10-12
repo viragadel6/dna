@@ -104,24 +104,60 @@ Motiváció: Homogén dekompozícióval lineáris egyenletek megoldása, maradé
 - Homotópia folytatás (Bertini) komplex megoldások keresésére.
 - Nem-kommutatív vagy Poisson-struktúra használata.
 
+## Új elméleti redukció: y-fok ≤2 lehetetlen (checkpoint)
+
+A checkpoint bizonyítása szerint ha $P=p_0+p_1y+p_2y^2$, $Q=q_0+q_1y+q_2y^2$, akkor $J(P,Q)=1$ az alábbi 4 egyenletre bomlik:
+- $p_0'q_1-p_1q_0'=1$
+- $2p_0'q_2+p_1'q_1-p_1q_1'-2p_2q_0'=0$
+- $2p_1'q_2+p_2'q_1-p_1q_2'-2p_2q_1'=0$
+- $2(p_2'q_2-p_2q_2')=0$
+
+Esetszétválasztás $p_2,q_2$ nulla/nem nulla szerint mind a 4 esetben ellentmondásra vezet a normalizációval $p_0(0)=q_0(0)=p_0(1)=q_0(1)=0$, $p_0'(0)=1$, $q_0'(0)=0$, $p_1(0)=0$, $q_1(0)=1$. Tehát minden ellenpéldában legalább az egyik komponens $y$-foka $\ge3$.
+
+## y-fok 3 redukció
+
+Legyen $R=Q-\lambda P=r_0+r_1y+r_2y^2$, $P=p_0+p_1y+p_2y^2+p_3y^3$, $J(P,R)=1$. Ekkor:
+- $y^0: p_0'r_1-p_1r_0'=1$
+- $y^1: 2p_0'r_2+p_1'r_1-p_1r_1'-2p_2r_0'=0$
+- $y^2: 2p_1'r_2+p_2'r_1-p_1r_2'-2p_2r_1'-3p_3r_0'=0$
+- $y^3: 2p_2'r_2+p_3'r_1-2p_2r_2'-3p_3r_1'=0$
+- $y^4: 2p_3'r_2-3p_3r_2'=0\Rightarrow r_2=\alpha h^2, p_3=\beta h^3$
+- Következő: $p_2=(3\beta/2\alpha)hr_1+\gamma h^2$
+
+Maradék 3 egyenlet $p_0,p_1,r_0,r_1,h$-ra. $h$ lineáris, $r_1$ kvadratikus, $p_1$ kvadratikus, $p_0,r_0$ köbös ansatz-cal 14 ismeretlen, 19 egyenlet (2 ütközés). Numerikus keresés cmath lambdify-val 20000 iter: objektív 241k$\to$0.4, maradék 0.1-0.5, nem nulla. $h$ kvadratikus, $r_1$ köbös, $p_1$ köbös, $p_0,r_0$ kvartikus ansatz: 18 ismeretlen, 28 egyenlet, 30000 iter: 0.67 maradék.
+
+Következtetés: $y$-fok 3 redukció kis fokú $h$-val nem ad megoldást, magasabb fokú $h$ szükséges.
+
+## További kísérletek a checkpoint alapján
+
+- Vonal Bezout: $p_0'q_1-p_1q_0'=1$, $\gcd(p_0',q_0')=1$, $q_0\not\equiv0$. Seed: $p_0=x-x^2$, $q_0=x^2(x-1)$, $p_1=8x$, $q_1=1+2x-12x^2$ kielégíti.
+- Kiterjesztés $Q$ kvadratikus, $P$ köbös $y$-ban konstans top paraméterrel: $Q=q_0+q_1y+ay^2$, $P=p_0+p_1y+(\mu q_1+c)y^2+by^3$ $\Rightarrow$ $\mu=0,a=-4,c=-4$, majd $x^2$ obstrukció $120\neq0$.
+- Fokpár szűrés: ha egy komponens foka $\le2$, automorfizmus; ha egyik fok osztja másikat, trianguláris redukció; ha $\gcd(\deg P,\deg Q)\le2$, Magnus/Applegate-Onishi. Így $\le8$ összfokig minden kizárva, első nem kizárt $(9,6)$.
+
 ## Fájlok
-- search_d3.py: d=3 teljes rendszer felállítása
-- test_family_d3.py: L-család tesztelése
-- case3_d3.py: d=3 esetszétválasztás megoldása
-- druzkowski.py: Drużkowski és homogén fok 3 osztályozás
-- search_d4_numeric.py: d=4 teljes numerikus nsolve
+- search_d3.py: d=3 teljes rendszer
+- test_family_d3.py: L-család
+- case3_d3.py: d=3 esetszétválasztás
+- druzkowski.py: Drużkowski és homogén fok 3
+- search_d4_numeric.py: d=4 teljes nsolve
 - search_d4_A4zero.py: d=4 A4=0
 - search_d4_prop.py: B4=k A4
 - factorized_ansatz.py: faktorizált kis támogatás
 - sparse_enum_d3.py: ritka d=3
 - x_degree_2.py: x-fok 2 család
 - random_search_d4.py: random hill climbing d=4
-- fast_search_d4.py: gyors cmath lambdify d=4
+- fast_search_d4.py: gyors d=4
 - fast_search_d5.py: gyors d=5
-- factorized_fast_d4.py: faktorizált gyors d=4 fok2 S,T
+- factorized_fast_d4.py: faktorizált fok2 S,T
 - factorized_fast_d4_deg3.py: faktorizált fok3 S,T
 - sparse_exact_d4.py: ritka egzakt d=4
 - groebner_d4_A4zero.py: Gröbner kísérlet
-- reduced_A4zero.py: redukált A4=0 b40 eliminálva
+- reduced_A4zero.py: redukált A4=0
+- ydeg3_reduction.py: y-fok 3 redukció egzakt
+- fast_ydeg3.py: y-fok 3 gyors keresés h lineáris
+- fast_ydeg3_h2.py: y-fok 3 h kvadratikus
+- sparse_exact_d6.py: ritka d=6
+- factorized_fast_d4_deg3.py: faktorizált fok3 S,T (duplikált)
+- keller_ideal Sage kód: checkpoint-ben megadott verifikátor
 
-Minden script futtatva, eredmények logolva.
+Minden script futtatva, eredmények logolva. Legjobb közelítő objektív $d=4$-re 2.99, $d=5$-re 386, $y$-fok 3 redukcióra 0.4-0.67, de egzakt nulla nem elérve.
